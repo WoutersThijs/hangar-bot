@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  hangar_bot:
+    container_name: HangarBot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/usr/src/app
+    tty: true
+volumes:
+  app:

@@ -1,4 +1,1 @@
-hangar-bot/secrets.py
-hangar-bot/session.session
-hangar-bot/session.session-journal
-hangar-bot/__pycache__
+app/.env
