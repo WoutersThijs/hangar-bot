@@ -33,7 +33,7 @@ async def on_message(message):
     if message.author == discord_client.user:
         return
 
-    if message.content.startswith('/hangar add news'):
+    if message.content.startswith('/hangar add zzzzzz'):
         await message.channel.send('Ready to send news in this channel!')
     
     if message.content.startswith('/hangar add tradinghours'):
