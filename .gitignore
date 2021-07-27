@@ -1,3 +1,4 @@
 app/.env
 app/session.session
 app/session.session-journal
+app/data
