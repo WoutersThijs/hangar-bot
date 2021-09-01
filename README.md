@@ -21,7 +21,7 @@ This argument turns Telegram listening on for the chat the command has been sent
 With this command you can add a Telegram channel to listen to. The channel name should be the name of the link of the channel. You can find this in the Telegram channel info. The link starts with t.me/[channel_name].
 
 ##### /hb add [channel_name]
-With this command you can remove a Telegram channel from the list. The channel name should be the name of the link of the channel. You can find this in the Telegram channel info. The link starts with t.me/[channel_name].
+With this command you can remove a Telegram channel from the list. The channel name should be the name of the link of the channel. You can find this in the Telegram channel info. The link looks like: t.me/[channel_name].
 
 ##### /hb tg reload
 This command should be used after you have made changes to the setup. It was possible to refresh the configuration on each command execution but this caused a little bit of delay.
