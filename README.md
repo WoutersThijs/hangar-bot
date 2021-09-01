@@ -9,7 +9,7 @@ The bot is able to listen to Telegram channels and forward the incomming message
 Commands configure the chat you are typing in.
 
 ##### /hb tg status
-The status argument tells you if Telegram listening has been turned and lists the channels it's listening to.
+The status argument tells you if Telegram listening has been turned on / off and lists the channels it's listening to.
 
 ##### /hb tg on
 This argument turns Telegram listening on for the chat the command has been sent in.
