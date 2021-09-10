@@ -60,7 +60,7 @@ async def on_ready():
 # Commands
 # - Telegram
 @discord_client.command(name="tg")
-@commands.has_role('Team')
+@commands.has_any_role('Dev', 'Team')
 async def telegram(ctx, *args):
     # Load JSON data
     with open('data.json') as file:
