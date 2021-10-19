@@ -6,8 +6,9 @@ from discord.ext import commands
 from telethon import TelegramClient, events, utils
 from telethon.tl.types import PeerChannel
 from telethon.tl.functions.channels import JoinChannelRequest
+import datetime
 import asyncio
-
+import aiocron
 import json
 
 load_dotenv()
@@ -39,10 +40,12 @@ async def on_ready():
         with open("data.json", "w") as file:
             json.dump(data, file)
 
+    # Components
     # Load data.json
     with open('data.json') as file:
         data = json.load(file)
-    
+
+    # Telegram 
     # Create set with telegram channels
     telegram_channels = set()
     for discord_channel in data['discord_channels']:
@@ -58,7 +61,6 @@ async def on_ready():
                 await discord_client.get_channel(discord_channel['id']).send(":speech_balloon:   " + event.chat.title + "   :speech_balloon:\n \n" + event.text)
 
 # Commands
-# - Telegram
 @discord_client.command(name="tg")
 @commands.has_any_role('Dev', 'Team')
 async def telegram(ctx, *args):
@@ -251,6 +253,139 @@ async def telegram(ctx, *args):
 
 @telegram.error
 async def telegram_error(ctx, error):
+    if isinstance(error, commands.MissingRole):
+        # Delay time for message removal
+        time = 5
+
+        msg = await ctx.channel.send("You don't have enough permissions to run this command." +
+                               "\n**:no_entry_sign:  -** _This message will be removed in " + str(time) + " seconds._")
+        
+        await asyncio.sleep(time)
+        await msg.delete()
+
+@discord_client.command(name="th")
+@commands.has_any_role('Dev', 'Team')
+async def tradinghours(ctx, *args):
+    # Load JSON data
+    with open('data.json') as file:
+        data = json.load(file)
+    
+    def write_json():
+        # Write to data.json
+        with open("data.json", "w") as file:
+            json.dump(data, file)
+
+    # Create set with existing channel ids
+    existing_channel_ids = set()
+    for channel in data['discord_channels']:
+        existing_channel_ids.add(int(channel['id']))
+
+    # Create new one of not exists
+    if ctx.channel.id not in existing_channel_ids:
+        data['discord_channels'].append({
+            "id": ctx.channel.id,
+            "telegram": False,
+            "tradinghours": False,
+            "telegram_channels": ["hangarbottest"]
+        })
+
+    # Arguments
+    # - On
+    if args[0] == "on":
+        for index, existing_channel in enumerate(data['discord_channels'], start=0):
+            if existing_channel['id'] == ctx.channel.id:
+                # Tradinghours = true
+                if(existing_channel['tradinghours'] == True):
+                    # Delay time for message removal
+                    time = 10
+
+                    # Send message in Discord
+                    msg = await ctx.channel.send("Tradinghours are already **ON** for this channel." +
+                                                 "\n**:no_entry_sign:  -** _This message will be removed in " + str(time) + " seconds._")
+                    await asyncio.sleep(time)
+                    await msg.delete()
+                  
+                # Tradinghours = false
+                else:
+                    # Set value 'Tradinghours' to 'True'
+                    data['discord_channels'][index]['tradinghours'] = True
+                    
+                    # Delay time for message removal
+                    time = 15
+
+                    # Send message in Discord
+                    msg = await ctx.channel.send("Tradinghours have been turned **ON** for this channel.")
+
+                    write_json()
+                    await asyncio.sleep(time)
+                    await msg.delete()
+
+    # - Off
+    elif args[0] == "off":
+        for index, existing_channel in enumerate(data['discord_channels'], start=0):
+            if existing_channel['id'] == ctx.channel.id:
+                # Delay time for message removal
+                time = 10
+
+                # Tradinghours = true
+                if(existing_channel['tradinghours'] == True):
+                    
+                    # Set value 'News' to 'True'
+                    data['discord_channels'][index]['tradinghours'] = False
+
+                    # Send message in Discord
+                    msg = await ctx.channel.send("Tradinghours have been turned **OFF** for this channel." +
+                                           "\n**:white_check_mark:  -** _This message will be removed in " + str(time) + " econds._")
+
+                    write_json()
+                    await asyncio.sleep(time)
+                    await msg.delete()
+
+                # Tradinghours = false
+                else:
+                    # Send message in Discord
+                    msg = await ctx.channel.send("Tradinghours are already **OFF** for this channel." +
+                                           "\n**:no_entry_sign:  -** _This message will be removed in " + str(time) + " seconds._")
+
+                    await asyncio.sleep(time)
+                    await msg.delete()
+
+    # - Status
+    elif args[0] == "status":
+        for index, existing_channel in enumerate(data['discord_channels'], start=0):
+            if existing_channel['id'] == ctx.channel.id:
+                # Delay time for message removal
+                time = 20
+
+                if existing_channel['tradinghours'] == True:
+                    await ctx.channel.send("Tradinghours are: **ON**")
+                else:
+                    await ctx.channel.send("Tradinghours are: **OFF**")
+    
+    elif args[0] == "reload":
+        # Delay time for message removal
+        await ctx.channel.send("Reloading... It can take me a few seconds to start up again." +
+                                "\n**:white_check_mark:  -** _This message has to be removed manually_")
+
+        restart_bot()
+
+    # - Other
+    else:
+        # Delay time for message removal
+        time = 30
+
+        msg = await ctx.channel.send("**" + args[0] + "** is not a valid argument. Use:" +
+        "\n-  /hb th status" +
+        "\n-  /hb th on" +
+        "\n-  /hb th off" +
+        "\n-  /hb th reload" +
+        "\n**:white_check_mark:  -** _This message will be removed in " + str(time) + " seconds._")
+
+        await asyncio.sleep(time)
+        await msg.delete()
+
+@tradinghours.error
+async def tradinghours_error(ctx, error):
     if isinstance(error, commands.MissingRole):
         # Delay time for message removal
         time = 5

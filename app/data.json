@@ -1,0 +1,29 @@
+{
+    "discord_channels": [
+        {
+            "id": 845251997795614730,
+            "telegram": true,
+            "tradinghours": true,
+            "telegram_channels": [
+                "hangarbottest",
+                "the_block_crypto"
+            ]
+        },
+        {
+            "id": 882183594406182962,
+            "telegram": true,
+            "tradinghours": true,
+            "telegram_channels": [
+                "hangarbottest",
+                "hangarbottest2"
+            ]
+        }
+    ],
+    "tradinghours": [
+        {
+            "name": "NYSE",
+            "opening_time": 5,
+            "opening_minute": 5
+        }
+    ]
+}
